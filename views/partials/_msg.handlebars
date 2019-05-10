@@ -1,0 +1,20 @@
+{{#if success_msg}}
+<div class="alert alert-success alert-dismissible">
+  {{success_msg}}
+  <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+</div>
+{{/if}}
+
+{{#if error_msg}}
+<div class="alert alert-danger">
+  {{error_msg}}
+  <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+</div>
+{{/if}}
+
+{{#if info_msg}}
+<div class="alert alert-info">
+  {{info_msg}}
+  <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+</div>
+{{/if}}

@@ -1,7 +1,9 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
-const methodOverride = require('method-override')
+const methodOverride = require('method-override');
+const flash = require('connect-flash');
+const session = require('express-session');
 const mongoose = require('mongoose');
 
 const app = express();
@@ -32,6 +34,23 @@ app.use(bodyParser.json());
 
 //methodoverrride middleware
 app.use(methodOverride('_method'));
+
+//exporess session middleware
+app.use(session({
+  secret: 'mommy kissed santa',
+  resave: false,
+  saveUninitialized: true,
+}));
+app.use(flash());
+
+//Globsl var
+app.use(function(req, res, next){
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.info_msg = req.flash('info_msg');
+  res.locals.error = req.flash('error');
+  next();
+});
 
 //index route
 app.get('/', (req, res) => {
@@ -76,6 +95,7 @@ app.delete('/notes/:id', (req, res) => {
   Note.remove({
     _id: req.params.id})
     .then(() =>{
+      req.flash('success_msg', 'Note removed');
       res.redirect('/notes');
     });
 });
@@ -103,6 +123,7 @@ app.post('/notes', (req, res) => {
     new Note(newUser)
       .save()
       .then(note => {
+        req.flash('info_msg', 'Note created');
         res.redirect('/notes');
       });
   }
@@ -120,6 +141,7 @@ app.put('/notes/:id', (req, res) => {
 
       note.save()
       .then(note=>{
+        req.flash('success_msg', 'Note updated');
         res.redirect('/notes');
       })
     });
