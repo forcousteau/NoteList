@@ -1,14 +1,14 @@
 {{#each notes}}
 <div class="card card-body mb-1">
-    <h4><span class="label label-info">title:</span> {{title}}</h4>
-    <p><span class="label label-warning">body:</span> {{body}}</p>
-    <form method="post" action="/notes/{{id}}?_method=DELETE">
-        <div class="btn-group">
-            <a href="/notes/edit/{{id}}" class="btn btn-success">Edit</a>
-            <input type="hidden" name="_method" vlaue="DELETE">
-            <input type="submit" class="btn btn-danger" value="Delete">
-        </div>
-    </form>
+  <h4><span class="label label-info">title:</span> {{title}}</h4>
+  <p><span class="label label-warning">body:</span> {{body}}</p>
+  <form method="post" action="/notes/{{id}}?_method=DELETE">
+    <div class="btn-group">
+      <a href="/notes/edit/{{id}}" class="btn btn-success">Edit</a>
+      <input type="hidden" name="_method" vlaue="DELETE">
+      <input type="submit" class="btn btn-danger" value="Delete">
+    </div>
+  </form>
 </div>
 {{else}}
 <p>No notes posted</p>
