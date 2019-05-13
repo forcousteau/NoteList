@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const session = require('express-session');
+const passport = require('passport');
 const mongoose = require('mongoose');
 
 const app = express();
@@ -12,6 +13,9 @@ const app = express();
 //load routes
 const notes = require('./routes/notes');
 const users = require('./routes/users');
+
+//passport config
+require('./config/passport')(passport);
 
 //map global promise - ger rid of warning(i kinda don t have it)
 //mongoose.Promise = global.Promise;
