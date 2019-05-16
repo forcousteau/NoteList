@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
+//Load helper
+const { ensureAuthenticated } = require('../helpers/auth');
+
 //Load Note Model from models/note.js
 require('../models/Note');
 const Note = mongoose.model('notes');
@@ -9,8 +12,8 @@ const Note = mongoose.model('notes');
 //get note index page
 //post render form
 router.route('/')
-  .get((req, res) => {
-    Note.find({})
+  .get(ensureAuthenticated, (req, res) => {
+    Note.find({ user: req.user.id })
       .sort({ date: 'desc' })
       .then(notes => {
         res.render('notes/index', {
@@ -18,7 +21,7 @@ router.route('/')
         });
       });
   })
-  .post((req, res) => {
+  .post(ensureAuthenticated, (req, res) => {
     let errors = [];
     if (!req.body.title) {
       errors.push({ text: 'Please add title' });
@@ -36,7 +39,8 @@ router.route('/')
     } else {
       const newUser = {
         title: req.body.title,
-        body: req.body.body
+        body: req.body.body,
+        user: req.user.id
       }
       new Note(newUser)
         .save()
@@ -48,26 +52,31 @@ router.route('/')
   });
 
 //add note form /notes/add
-router.get('/add', (req, res) => {
+router.get('/add', ensureAuthenticated, (req, res) => {
   res.render("notes/add");
 });
 
 //edit note form /notes/add
-router.get('/edit/:id', (req, res) => {
+router.get('/edit/:id', ensureAuthenticated, (req, res) => {
   Note.findOne({
     _id: req.params.id
   })
     .then(note => {
-      res.render('notes/edit', {
-        note: note
-      });
+      if (note.user != req.user.id) {
+        req.flash('error_msg', 'Not authorized');
+        res.redirect('/notes');
+      } else {
+        res.render('notes/edit', {
+          note: note
+        });
+      }
     });
 });
 
 //edit note form process TODO TRY to do this with ajax
 //delete note
 router.route('/:id')
-  .put((req, res) => {
+  .put(ensureAuthenticated, (req, res) => {
     Note.findOne({
       _id: req.params.id
     })
@@ -83,7 +92,7 @@ router.route('/:id')
           })
       });
   })
-  .delete((req, res) => {
+  .delete(ensureAuthenticated, (req, res) => {
     Note.remove({
       _id: req.params.id
     })
@@ -92,5 +101,5 @@ router.route('/:id')
         res.redirect('/notes');
       });
   });
-  
+
 module.exports = router;

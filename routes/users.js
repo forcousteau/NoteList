@@ -16,8 +16,8 @@ router.route('/login')
   })
   .post((req, res, next) => {
     passport.authenticate('local', {
-      successRedirect:'/ideas',
-      failureRedirect:'/users/login',
+      successRedirect: '/notes',
+      failureRedirect: '/users/login',
       failureFlash: true
     })(req, res, next);
   });
@@ -83,6 +83,15 @@ router.route('/register')
         });
       });
     }
+  });
+
+
+//logout handle
+router.route('/logout')
+  .get((req, res) => {
+    req.logout();
+    req.flash('success_msg', 'You are logged out');
+    res.redirect('/users/login');
   });
 
 module.exports = router;
