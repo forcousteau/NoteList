@@ -11,8 +11,8 @@ const mongoose = require('mongoose');
 const app = express();
 
 //load routes
-const notes = require('./routes/notes');
-const users = require('./routes/users');
+const notes = require('./routes/notes.js');
+const users = require('./routes/users.js');
 
 //passport config
 require('./config/passport')(passport);
