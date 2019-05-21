@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const { ensureAuthenticated } = require('../helpers/auth');
 
 //Load Note Model from models/note.js
-require(`../models/Note.js`);
+require('../models/Note');
 const Note = mongoose.model('notes');
 
 //get note index page
